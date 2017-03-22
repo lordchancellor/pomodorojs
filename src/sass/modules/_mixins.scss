@@ -1,0 +1,62 @@
+// Mixins
+@mixin marginX($margin) {
+    margin-left: $margin;
+    margin-right: $margin;
+}
+
+@mixin marginY($margin) {
+    margin-bottom: $margin;
+    margin-top: $margin;
+}
+
+@mixin paddingX($padding) {
+    padding-left: $padding;
+    padding-right: $padding;
+}
+
+@mixin paddingY($padding) {
+    padding-bottom: $padding;
+    padding-top: $padding;
+}
+
+@mixin circle-div($radius) {
+	border-radius: 100%;
+	height: $radius;
+	width: $radius;
+}
+
+@mixin background-defaults {
+    background-color: transparent;
+    background-image: none;
+    background-position: 0% 0%;
+    background-size: auto;
+    background-repeat: repeat;
+    background-origin: padding-box;
+    background-clip: border-box;
+    background-attachment: scroll;
+}
+
+@mixin box-shadow($shadow...) {
+  -webkit-box-shadow: $shadow; // iOS <4.3 & Android <4.1
+          box-shadow: $shadow;
+}
+
+@mixin user-select($select) {
+  -webkit-user-select: $select;
+     -moz-user-select: $select;
+      -ms-user-select: $select; // IE10+
+          user-select: $select;
+}
+
+@mixin tab-focus() {
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+
+@mixin opacity($opacity) {
+  opacity: $opacity;
+  // IE8 filter
+  $opacity-ie: ($opacity * 100);
+  filter: alpha(opacity=$opacity-ie);
+}
+
