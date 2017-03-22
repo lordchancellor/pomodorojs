@@ -1,0 +1,98 @@
+header {
+	@include paddingX(30px);
+
+	h1 {
+		// color: red;
+	}
+
+	.copy-text {
+		a {
+			text-decoration: none;
+			color: $darkText;
+
+			&:hover,
+			&:focus {
+				text-decoration: underline;
+			}	
+		}
+	}
+}
+
+.pomodoro-container {
+	margin-top: 50px;
+
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+
+	.pomodoro-outer {
+		width: 600px;
+		height: 600px;
+		background: black;
+		border-radius: 50%;
+
+		display: flex;
+		justify-content: center;
+		align-items: center;
+
+		.pomodoro-inner {
+			width: 550px;
+			height: 550px;
+			background: white;
+			border-radius: 50%;
+
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+
+			h2, h4 {
+				margin: 0;
+			}
+
+			h2 {
+				font-size: 5.0rem;
+			}
+
+			h4 {
+				font-size: 3.0rem;
+			}
+
+			.work-time,
+			.break-time {
+				display: flex;
+				flex-direction: row;
+				align-items: center;
+				@include paddingX(20px);
+
+				button {
+					background: none;
+					border: none;
+				}
+
+				.timer {
+					width: 300px;
+					text-align: center;
+				}
+			}
+
+			.work-time {
+				font-size: 6.0rem;
+				margin-bottom: 35px;
+
+				button {
+					font-size: 4.5rem;
+				}
+			}
+
+			.break-time {
+				font-size: 4.0rem;
+
+				button {
+					font-size: 2.5rem;
+				}
+			}
+		}
+	}
+}
