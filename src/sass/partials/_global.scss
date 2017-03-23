@@ -10,3 +10,14 @@ body {
 h1, h2, h4 {
     font-family: 'Sacramento', cursive;
 }
+
+button {
+    &:hover,
+    &:focus {
+        cursor: pointer;
+    }
+
+    &:focus {
+        outline: none;
+    }
+}
