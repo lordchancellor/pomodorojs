@@ -47,7 +47,7 @@ const uiAPI = {
 const timerAPI = {
 	workTime: 1,
 	breakTime: 5,
-	timerActive: false,
+	isPaused: false,
 
 	getWorkTime: function getWorkTime() {
 		return this.workTime;
@@ -76,14 +76,14 @@ const timerAPI = {
 		document.getElementsByClassName('start-button-container')[0].style.display = 'flex';
 		document.getElementsByClassName('pause-button-container')[0].style.display = 'none';
 
+		this.isPaused = true;
 		console.log('Pause clicked');
 	},
 
 	countDown: function countDown(time = this.workTime) {
-		this.timerActive = true;
 		const minutes = uiAPI.getMinutes('work-time');
 
-		if (time >= 0) {
+		if (time >= 0 && !timerAPI.isPaused) {
 			minutes.textContent = time;
 			this.minuteTimer();
 			setTimeout(() => this.countDown(time - 1), 60000);
@@ -93,7 +93,7 @@ const timerAPI = {
 	minuteTimer: function minuteTimer(i = 59) {
 		const seconds = uiAPI.getSeconds('work-time');
 
-		if (i >= 0) {
+		if (i >= 0 && !timerAPI.isPaused) {
 			if (i < 10) {
 				seconds.textContent = '0' + i;
 			}
