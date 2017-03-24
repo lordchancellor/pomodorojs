@@ -48,6 +48,7 @@ const timerAPI = {
 	workTime: 1,
 	breakTime: 5,
 	isPaused: false,
+	workTimerActive: true,
 
 	getWorkTime: function getWorkTime() {
 		return this.workTime;
@@ -69,7 +70,39 @@ const timerAPI = {
 		document.getElementsByClassName('start-button-container')[0].style.display = 'none';
 		document.getElementsByClassName('pause-button-container')[0].style.display = 'flex';
 
-		this.countDown(this.workTime);
+		if (!this.isPaused) {
+			this.countDown(this.workTime);
+		}
+		else {
+			console.log('Paused code');
+			let minutes;
+			let seconds;
+
+			if (this.workTimerActive) {
+				// Restart the work timer
+				minutes = Number(uiAPI.getMinutes('work-time').textContent);
+				seconds = Number(uiAPI.getSeconds('work-time').textContent);
+			}
+			else {
+				// Restart the break timer
+				minutes = Number(uiAPI.getMinutes('work-time').textContent);
+				seconds = Number(uiAPI.getSeconds('work-time').textContent);
+			}
+
+			console.log(minutes, seconds);
+
+			this.isPaused = false;
+
+			if (seconds !== 0) {
+				this.countDown(minutes, seconds-1);
+			}
+			else if (minutes !== 0) {
+				this.countDown(minutes-1);
+			}
+			else {
+				// TODO Timer is finished, move on to the next cycle
+			}
+		}
 	},
 
 	pauseTimer: function pauseTimer() {
@@ -77,15 +110,14 @@ const timerAPI = {
 		document.getElementsByClassName('pause-button-container')[0].style.display = 'none';
 
 		this.isPaused = true;
-		console.log('Pause clicked');
 	},
 
-	countDown: function countDown(time = this.workTime) {
+	countDown: function countDown(time = this.workTime, seconds = 59) {
 		const minutes = uiAPI.getMinutes('work-time');
 
 		if (time >= 0 && !timerAPI.isPaused) {
 			minutes.textContent = time;
-			this.minuteTimer();
+			this.minuteTimer(seconds);
 			setTimeout(() => this.countDown(time - 1), 60000);
 		}
 	},
