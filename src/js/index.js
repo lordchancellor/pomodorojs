@@ -18,10 +18,16 @@ const setupAPI = {
 	setupPage: function setupPage() {
 		this.setDate();
 		this.setListeners();
+		uiAPI.setTimers();
 	}
 };
 
 const uiAPI = {
+	setTimers: function setTimers() {
+		document.getElementsByClassName('work-time')[0].getElementsByClassName('minutes')[0].textContent = timerAPI.getWorkTime();
+		document.getElementsByClassName('break-time')[0].getElementsByClassName('minutes')[0].textContent = timerAPI.getBreakTime();
+	},
+
 	getMinutes: function getMinutes(parent) {
 		return document.getElementsByClassName(parent)[0].getElementsByClassName('minutes')[0];
 	},
@@ -46,9 +52,9 @@ const uiAPI = {
 
 const timerAPI = {
 	workTime: 1,
-	breakTime: 5,
+	breakTime: 1,
 	isPaused: false,
-	workTimerActive: true,
+	isWorkTime: true,
 
 	getWorkTime: function getWorkTime() {
 		return this.workTime;
@@ -78,13 +84,11 @@ const timerAPI = {
 			let minutes;
 			let seconds;
 
-			if (this.workTimerActive) {
-				// Restart the work timer
+			if (this.isWorkTime) {
 				minutes = Number(uiAPI.getMinutes('work-time').textContent);
 				seconds = Number(uiAPI.getSeconds('work-time').textContent);
 			}
 			else {
-				// Restart the break timer
 				minutes = Number(uiAPI.getMinutes('work-time').textContent);
 				seconds = Number(uiAPI.getSeconds('work-time').textContent);
 			}
@@ -100,7 +104,7 @@ const timerAPI = {
 				this.countDown(minutes-1);
 			}
 			else {
-				// TODO Timer is finished, move on to the next cycle
+				this.nextCycle();
 			}
 		}
 	},
@@ -112,18 +116,28 @@ const timerAPI = {
 		this.isPaused = true;
 	},
 
-	countDown: function countDown(time = this.workTime, seconds = 59) {
-		const minutes = uiAPI.getMinutes('work-time');
+	nextCycle: function nextCycle() {
+		this.isWorkTime = !this.isWorkTime;
+		this.countDown();
+	},
 
-		if (time >= 0 && !timerAPI.isPaused) {
-			minutes.textContent = time;
-			this.minuteTimer(seconds);
-			setTimeout(() => this.countDown(time - 1), 60000);
+	countDown: function countDown(time = this.isWorkTime ? this.workTime : this.breakTime, seconds = 59) {
+		const minutes = timerAPI.isWorkTime ? uiAPI.getMinutes('work-time') : uiAPI.getMinutes('break-time');
+
+		if (time > 0 && !timerAPI.isPaused) {
+			minutes.textContent = Number(time - 1);
+			timerAPI.minuteTimer(seconds);
+			setTimeout(() => timerAPI.countDown(time - 1), 60000);
+		}
+
+		if (time === 0) {
+			this.nextCycle();
+			console.log('End of cycle');
 		}
 	},
 
 	minuteTimer: function minuteTimer(i = 59) {
-		const seconds = uiAPI.getSeconds('work-time');
+		const seconds = timerAPI.isWorkTime ? uiAPI.getSeconds('work-time') : uiAPI.getSeconds('break-time');
 
 		if (i >= 0 && !timerAPI.isPaused) {
 			if (i < 10) {
