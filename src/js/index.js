@@ -7,9 +7,11 @@ const setupAPI = {
 
 	setListeners: function setListeners() {
 		const startBtn = document.getElementsByClassName('start-btn')[0];
+		const pauseBtn = document.getElementsByClassName('pause-btn')[0];
 		const resetBtn = document.getElementsByClassName('reset-btn')[0];
 
 		startBtn.addEventListener('click', () => timerAPI.startTimer());
+		pauseBtn.addEventListener('click', () => timerAPI.pauseTimer());
 		resetBtn.addEventListener('click', () => uiAPI.reset());
 	},
 
@@ -64,16 +66,17 @@ const timerAPI = {
 	},
 
 	startTimer: function startTimer() {
-		const label = document.getElementsByClassName('start-pause')[0];
+		document.getElementsByClassName('start-button-container')[0].style.display = 'none';
+		document.getElementsByClassName('pause-button-container')[0].style.display = 'flex';
 
-		if (!this.timerActive) {
-			label.textContent = 'Pause';
-			this.countDown(this.workTime);
-		}
-		else {
-			label.textContent = 'Start';
-			this.timerActive = false;
-		}
+		this.countDown(this.workTime);
+	},
+
+	pauseTimer: function pauseTimer() {
+		document.getElementsByClassName('start-button-container')[0].style.display = 'flex';
+		document.getElementsByClassName('pause-button-container')[0].style.display = 'none';
+
+		console.log('Pause clicked');
 	},
 
 	countDown: function countDown(time = this.workTime) {
@@ -102,6 +105,7 @@ const timerAPI = {
 	}
 };
 
+// TODO Remove for production
 window.timer = timerAPI;
 
 (() => setupAPI.setupPage())();
