@@ -51,10 +51,11 @@ const uiAPI = {
 };
 
 const timerAPI = {
-	workTime: 1,
+	workTime: 2,
 	breakTime: 1,
 	isPaused: false,
 	isWorkTime: true,
+	timeouts: [],
 
 	getWorkTime: function getWorkTime() {
 		return this.workTime;
@@ -80,26 +81,16 @@ const timerAPI = {
 			this.countDown(this.workTime);
 		}
 		else {
-			console.log('Paused code');
-			let minutes;
-			let seconds;
-
-			if (this.isWorkTime) {
-				minutes = Number(uiAPI.getMinutes('work-time').textContent);
-				seconds = Number(uiAPI.getSeconds('work-time').textContent);
-			}
-			else {
-				minutes = Number(uiAPI.getMinutes('work-time').textContent);
-				seconds = Number(uiAPI.getSeconds('work-time').textContent);
-			}
+			const minutes = this.isWorkTime ? Number(uiAPI.getMinutes('work-time').textContent) : Number(uiAPI.getMinutes('break-time').textContent);
+			const seconds = this.isWorkTime ? Number(uiAPI.getSeconds('work-time').textContent) : Number(uiAPI.getSeconds('break-time').textContent);
 
 			this.isPaused = false;
 
 			if (seconds !== 0) {
-				this.countDown(minutes, seconds-1);
+				this.countDown(minutes + 1, seconds-1);
 			}
 			else if (minutes !== 0) {
-				this.countDown(minutes-1);
+				this.countDown(minutes);
 			}
 			else {
 				this.nextCycle();
@@ -111,26 +102,35 @@ const timerAPI = {
 		document.getElementsByClassName('start-button-container')[0].style.display = 'flex';
 		document.getElementsByClassName('pause-button-container')[0].style.display = 'none';
 
+		this.clearTimeouts();
+
 		this.isPaused = true;
 	},
 
 	nextCycle: function nextCycle() {
 		this.isWorkTime = !this.isWorkTime;
+		this.clearTimeouts();
 		this.countDown();
 	},
 
-	countDown: function countDown(time = this.isWorkTime ? this.workTime : this.breakTime, seconds = 59) {
-		const minutes = timerAPI.isWorkTime ? uiAPI.getMinutes('work-time') : uiAPI.getMinutes('break-time');
+	countDown: function countDown(time = timerAPI.isWorkTime ? timerAPI.workTime : timerAPI.breakTime, seconds = 59) {
+		if (!timerAPI.isPaused) {
+			if (time === 0) {
+				timerAPI.nextCycle();
+			}
+			else {
+				const minutes = timerAPI.isWorkTime ? uiAPI.getMinutes('work-time') : uiAPI.getMinutes('break-time');
 
-		if (time > 0 && !timerAPI.isPaused) {
-			minutes.textContent = Number(time - 1);
-			timerAPI.minuteTimer(seconds);
-			setTimeout(() => timerAPI.countDown(time - 1), 60000);
-		}
+				// Make sure nobody tries to kick off a timer with more than 59 seconds
+				seconds = seconds > 59 ? 59 : seconds;
 
-		if (time === 0) {
-			this.nextCycle();
-			console.log('End of cycle');
+				if (seconds === 59) {
+					minutes.textContent = time > 0 ? time - 1 : time;
+				}
+
+				timerAPI.minuteTimer(seconds);
+				timerAPI.timeouts.push(setTimeout(() => timerAPI.countDown(time - 1), (seconds + 1) * 1000));
+			}
 		}
 	},
 
@@ -144,7 +144,13 @@ const timerAPI = {
 			else {
 				seconds.textContent = i;
 			}
-			setTimeout(() => timerAPI.minuteTimer(i-1), 1000);
+			timerAPI.timeouts.push(setTimeout(() => timerAPI.minuteTimer(i-1), 1000));
+		}
+	},
+
+	clearTimeouts: function clearTimeouts() {
+		for (const timeout of timerAPI.timeouts) {
+			clearTimeout(timeout);
 		}
 	}
 };
