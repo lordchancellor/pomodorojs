@@ -33,8 +33,6 @@ header {
 }
 
 .pomodoro-container {
-	//margin-top: 50px;
-
 	display: flex;
 	flex-direction: row;
 	align-items: center;
@@ -83,6 +81,14 @@ header {
 				button {
 					background: none;
 					border: none;
+
+					&[disabled] {
+						color: $btnDisabled;
+
+						&:hover {
+							cursor: not-allowed;
+						}
+					}
 				}
 
 				.timer {
@@ -144,7 +150,7 @@ header {
 
 				.reset-button-container {
 					button[disabled] {
-						background: rgba(#ccc, 0.6);
+						background: $btnDisabled;
 
 						&:hover {
 							cursor: not-allowed;

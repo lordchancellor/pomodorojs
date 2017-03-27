@@ -98,14 +98,24 @@ const uiAPI = {
 		timerAPI.setBreakTime(minutes);
 	},
 
-	toggleResetButton: function toggleResetButton(isPaused) {
-		const resetBtn = document.getElementsByClassName('reset-btn')[0];
+	toggleButtons: function toggleButtons(isPaused) {
+		console.log('Toggle buttons called with isPaused = ' + isPaused);
+
+		const buttons = [
+			document.getElementsByClassName('reset-btn')[0],
+			document.getElementsByClassName('work-time')[0].getElementsByClassName('increase')[0],
+			document.getElementsByClassName('work-time')[0].getElementsByClassName('decrease')[0],
+			document.getElementsByClassName('break-time')[0].getElementsByClassName('increase')[0],
+			document.getElementsByClassName('break-time')[0].getElementsByClassName('decrease')[0]
+		];
 		
-		if (!isPaused) {
-			resetBtn.setAttribute('disabled', 'disabled');
-		}
-		else {
-			resetBtn.removeAttribute('disabled');
+		for (const button of buttons) {
+			if (!isPaused) {
+				button.setAttribute('disabled', 'disabled');
+			}
+			else {
+				button.removeAttribute('disabled');
+			}
 		}
 	}
 };
@@ -137,9 +147,8 @@ const timerAPI = {
 		document.getElementsByClassName('start-button-container')[0].style.display = 'none';
 		document.getElementsByClassName('pause-button-container')[0].style.display = 'flex';
 
-		uiAPI.toggleResetButton(this.isPaused);
-
 		if (!this.isPaused) {
+			uiAPI.toggleButtons(this.isPaused);
 			this.countDown(this.workTime);
 		}
 		else {
@@ -147,6 +156,7 @@ const timerAPI = {
 			const seconds = this.isWorkTime ? Number(uiAPI.getSeconds('work-time').textContent) : Number(uiAPI.getSeconds('break-time').textContent);
 
 			this.isPaused = false;
+			uiAPI.toggleButtons(this.isPaused);
 
 			if (seconds !== 0) {
 				this.countDown(minutes + 1, seconds-1);
@@ -166,7 +176,7 @@ const timerAPI = {
 
 		this.isPaused = true;
 		this.clearTimeouts();
-		uiAPI.toggleResetButton(this.isPaused);
+		uiAPI.toggleButtons(this.isPaused);
 	},
 
 	nextCycle: function nextCycle() {
