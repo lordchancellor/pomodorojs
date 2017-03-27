@@ -9,10 +9,18 @@ const setupAPI = {
 		const startBtn = document.getElementsByClassName('start-btn')[0];
 		const pauseBtn = document.getElementsByClassName('pause-btn')[0];
 		const resetBtn = document.getElementsByClassName('reset-btn')[0];
+		const increaseWorkTime = document.getElementsByClassName('work-time')[0].getElementsByClassName('increase')[0];
+		const decreaseWorkTime = document.getElementsByClassName('work-time')[0].getElementsByClassName('decrease')[0];
+		const increaseBreakTime = document.getElementsByClassName('break-time')[0].getElementsByClassName('increase')[0];
+		const decreaseBreakTime = document.getElementsByClassName('break-time')[0].getElementsByClassName('decrease')[0];
 
 		startBtn.addEventListener('click', () => timerAPI.startTimer());
 		pauseBtn.addEventListener('click', () => timerAPI.pauseTimer());
 		resetBtn.addEventListener('click', () => uiAPI.reset());
+		increaseWorkTime.addEventListener('click', () => uiAPI.increaseWorkTime());
+		decreaseWorkTime.addEventListener('click', () => uiAPI.decreaseWorkTime());
+		increaseBreakTime.addEventListener('click', () => uiAPI.increaseBreakTime());
+		decreaseBreakTime.addEventListener('click', () => uiAPI.decreaseBreakTime());
 	},
 
 	setupPage: function setupPage() {
@@ -47,6 +55,58 @@ const uiAPI = {
 		for (const section of seconds) {
 			section.textContent = '00';
 		}
+	},
+
+	resetIndividual: function resetIndividual(isWorkTime) {
+		if (isWorkTime) {
+			document.getElementsByClassName('break-time')[0].getElementsByClassName('minutes')[0].textContent = timerAPI.getBreakTime();
+		}
+		else {
+			document.getElementsByClassName('work-time')[0].getElementsByClassName('minutes')[0].textContent = timerAPI.getWorkTime();
+		}
+	},
+
+	increaseWorkTime: function increaseWorkTime() {
+		const element = this.getMinutes('work-time');
+		const minutes = timerAPI.getWorkTime() < 120 ? timerAPI.getWorkTime() + 1 : timerAPI.getWorkTime();
+
+		element.textContent = minutes;
+		timerAPI.setWorkTime(minutes);
+	},
+
+	decreaseWorkTime: function decreaseWorkTime() {
+		const element = this.getMinutes('work-time');
+		const minutes = timerAPI.getWorkTime() > 1 ? timerAPI.getWorkTime() - 1 : timerAPI.getWorkTime();
+
+		element.textContent = minutes;
+		timerAPI.setWorkTime(minutes);
+	},
+
+	increaseBreakTime: function increaseWorkTime() {
+		const element = this.getMinutes('break-time');
+		const minutes = timerAPI.getBreakTime() < 120 ? timerAPI.getBreakTime() + 1 : timerAPI.getBreakTime();
+
+		element.textContent = minutes;
+		timerAPI.setBreakTime(minutes);
+	},
+
+	decreaseBreakTime: function decreaseWorkTime() {
+		const element = this.getMinutes('break-time');
+		const minutes = timerAPI.getBreakTime() > 1 ? timerAPI.getBreakTime() - 1 : timerAPI.getBreakTime();
+
+		element.textContent = minutes;
+		timerAPI.setBreakTime(minutes);
+	},
+
+	toggleResetButton: function toggleResetButton(isPaused) {
+		const resetBtn = document.getElementsByClassName('reset-btn')[0];
+		
+		if (!isPaused) {
+			resetBtn.setAttribute('disabled', 'disabled');
+		}
+		else {
+			resetBtn.removeAttribute('disabled');
+		}
 	}
 };
 
@@ -77,6 +137,8 @@ const timerAPI = {
 		document.getElementsByClassName('start-button-container')[0].style.display = 'none';
 		document.getElementsByClassName('pause-button-container')[0].style.display = 'flex';
 
+		uiAPI.toggleResetButton(this.isPaused);
+
 		if (!this.isPaused) {
 			this.countDown(this.workTime);
 		}
@@ -102,14 +164,15 @@ const timerAPI = {
 		document.getElementsByClassName('start-button-container')[0].style.display = 'flex';
 		document.getElementsByClassName('pause-button-container')[0].style.display = 'none';
 
-		this.clearTimeouts();
-
 		this.isPaused = true;
+		this.clearTimeouts();
+		uiAPI.toggleResetButton(this.isPaused);
 	},
 
 	nextCycle: function nextCycle() {
 		this.isWorkTime = !this.isWorkTime;
 		this.clearTimeouts();
+		uiAPI.resetIndividual(this.isWorkTime);
 		this.countDown();
 	},
 

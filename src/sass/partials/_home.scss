@@ -1,6 +1,12 @@
 header {
 	@include paddingX(30px);
 
+	@media screen and (min-width: 500px) {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+
 	h1 {
 		margin-bottom: 10px;
 	}
@@ -14,6 +20,14 @@ header {
 			&:focus {
 				text-decoration: underline;
 			}	
+		}
+	}
+
+	.btn {
+		display: none;
+
+		@media screen and (min-width: 500px) {
+			display: inline-block;
 		}
 	}
 }
@@ -126,6 +140,16 @@ header {
 
 				.pause-button-container {
 					display: none;
+				}
+
+				.reset-button-container {
+					button[disabled] {
+						background: rgba(#ccc, 0.6);
+
+						&:hover {
+							cursor: not-allowed;
+						}
+					}
 				}
 			}
 		}
