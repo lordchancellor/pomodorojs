@@ -1,6 +1,6 @@
 header {
 	padding: 20px 30px 10px;
-	background: black;
+	background: $darkText;
 
 	@media screen and (min-width: 500px) {
 		padding: 0px 30px;
@@ -13,11 +13,11 @@ header {
 	h1 {
 		margin: 0;
 		text-align: center;
-		color: white;
+		color: $whiteText;
 
 		@media screen and (min-width: 500px) {
 			margin: 20px 0px 10px;
-			color: black;
+			color: $darkText;
 			text-align: left;
 		}
 	}
@@ -67,7 +67,7 @@ header {
 		@media screen and (min-width: 500px) {
 			width: 500px;
 			height: 500px;
-			background: black;
+			background: $darkText;
 			border-radius: 50%;
 		}
 
@@ -87,7 +87,7 @@ header {
 			@media screen and (min-width: 500px) {
 				width: 450px;
 				height: 450px;
-				background: white;
+				background: $whiteText;
 				border-radius: 50%;
 			}
 
@@ -137,7 +137,8 @@ header {
 					border: none;
 
 					&[disabled] {
-						color: $btnDisabled;
+						// color: $btnDisabled;
+						opacity: 0.65;
 
 						&:hover {
 							cursor: not-allowed;
@@ -146,11 +147,31 @@ header {
 				}
 
 				.timer {
-					width: 225px;
-					text-align: center;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					@include marginX(15px);
+					// border: 1px solid;
 
-					@media screen and (min-width: 500px) {
-						width: 300px;
+					span:first-of-type {
+						display: inline-block;
+						width: 40%;
+						text-align: right;
+						// border: 1px solid red;
+					}
+
+					span:nth-of-type(2) {
+						display: inline-block;
+						width: 20%;
+						text-align: center;
+						// border: 1px solid blue;
+					}
+
+					span:last-of-type {
+						display: inline-block;
+						width: 40%;
+						text-align: left;
+						// border: 1px solid green;
 					}
 				}
 			}
@@ -179,6 +200,14 @@ header {
 						font-size: 4.5rem;
 					}
 				}
+
+				.timer {
+					width: 225px;
+					
+					@media screen and (min-width: 500px) {
+						width: 250px;
+					}
+				}
 			}
 
 			.break-time {
@@ -194,6 +223,15 @@ header {
 
 				button {
 					font-size: 2.5rem;
+				}
+
+				.timer {
+					width: 180px;
+					// @include marginX(10px);
+
+					@media screen and (min-width: 500px) {
+						width: 180px;
+					}
 				}
 			}
 
@@ -222,8 +260,8 @@ header {
 
 					button {
 						padding: 0;
-						border: 3px solid black;
-						background: white;
+						border: 3px solid $darkText;
+						background: $whiteText;
 						border-radius: 50%;
 						width: 40px;
 						height: 40px;
@@ -237,7 +275,8 @@ header {
 
 				.reset-button-container {
 					button[disabled] {
-						background: $btnDisabled;
+						// background: $btnDisabled;
+						opacity: 0.65;
 
 						&:hover {
 							cursor: not-allowed;

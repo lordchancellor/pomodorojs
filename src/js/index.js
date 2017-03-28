@@ -32,8 +32,11 @@ const setupAPI = {
 
 const uiAPI = {
 	setTimers: function setTimers() {
-		document.getElementsByClassName('work-time')[0].getElementsByClassName('minutes')[0].textContent = timerAPI.getWorkTime();
-		document.getElementsByClassName('break-time')[0].getElementsByClassName('minutes')[0].textContent = timerAPI.getBreakTime();
+		const workTime = this.getMinutes('work-time');
+		const breakTime = this.getMinutes('break-time');
+
+		workTime.textContent = timerAPI.getWorkTime() < 10 ? '0' + timerAPI.getWorkTime() : timerAPI.getWorkTime();
+		breakTime.textContent = timerAPI.getBreakTime() < 10 ? '0' + timerAPI.getBreakTime() : timerAPI.getBreakTime();
 	},
 
 	getMinutes: function getMinutes(parent) {
@@ -59,42 +62,54 @@ const uiAPI = {
 
 	resetIndividual: function resetIndividual(isWorkTime) {
 		if (isWorkTime) {
-			document.getElementsByClassName('break-time')[0].getElementsByClassName('minutes')[0].textContent = timerAPI.getBreakTime();
+			const breakTime = document.getElementsByClassName('break-time')[0].getElementsByClassName('minutes')[0];
+			
+			breakTime.textContent = timerAPI.getBreakTime() < 10 ? '0' + timerAPI.getBreakTime() : timerAPI.getBreakTime();
 		}
 		else {
-			document.getElementsByClassName('work-time')[0].getElementsByClassName('minutes')[0].textContent = timerAPI.getWorkTime();
+			const workTime = document.getElementsByClassName('work-time')[0].getElementsByClassName('minutes')[0];
+
+			workTime.textContent = timerAPI.getWorkTime() < 10 ? '0' + timerAPI.getWorkTime() : timerAPI.getWorkTime;
 		}
+	},
+
+	resetSeconds: function resetSeconds(parent) {
+		document.getElementsByClassName(parent)[0].getElementsByClassName('seconds')[0].textContent = '00';
 	},
 
 	increaseWorkTime: function increaseWorkTime() {
 		const element = this.getMinutes('work-time');
-		const minutes = timerAPI.getWorkTime() < 120 ? timerAPI.getWorkTime() + 1 : timerAPI.getWorkTime();
+		const minutes = timerAPI.getWorkTime() < 99 ? timerAPI.getWorkTime() + 1 : 1;
 
-		element.textContent = minutes;
+		element.textContent = Number(minutes) < 10 ? this.appendZero(minutes) : minutes;
+		this.resetSeconds('work-time');
 		timerAPI.setWorkTime(minutes);
 	},
 
 	decreaseWorkTime: function decreaseWorkTime() {
 		const element = this.getMinutes('work-time');
-		const minutes = timerAPI.getWorkTime() > 1 ? timerAPI.getWorkTime() - 1 : timerAPI.getWorkTime();
+		const minutes = timerAPI.getWorkTime() > 1 ? timerAPI.getWorkTime() - 1 : 99;
 
-		element.textContent = minutes;
+		element.textContent = Number(minutes) < 10 ? this.appendZero(minutes) : minutes;
+		this.resetSeconds('work-time');
 		timerAPI.setWorkTime(minutes);
 	},
 
-	increaseBreakTime: function increaseWorkTime() {
+	increaseBreakTime: function increaseBreakTime() {
 		const element = this.getMinutes('break-time');
-		const minutes = timerAPI.getBreakTime() < 120 ? timerAPI.getBreakTime() + 1 : timerAPI.getBreakTime();
+		const minutes = timerAPI.getBreakTime() < 99 ? timerAPI.getBreakTime() + 1 : 1;
 
-		element.textContent = minutes;
+		element.textContent = Number(minutes) < 10 ? this.appendZero(minutes) : minutes;
+		this.resetSeconds('break-time');
 		timerAPI.setBreakTime(minutes);
 	},
 
-	decreaseBreakTime: function decreaseWorkTime() {
+	decreaseBreakTime: function decreaseBreakTime() {
 		const element = this.getMinutes('break-time');
-		const minutes = timerAPI.getBreakTime() > 1 ? timerAPI.getBreakTime() - 1 : timerAPI.getBreakTime();
+		const minutes = timerAPI.getBreakTime() > 1 ? timerAPI.getBreakTime() - 1 : 99;
 
-		element.textContent = minutes;
+		element.textContent = Number(minutes) < 10 ? this.appendZero(minutes) : minutes;
+		this.resetSeconds('break-time');
 		timerAPI.setBreakTime(minutes);
 	},
 
@@ -117,11 +132,15 @@ const uiAPI = {
 				button.removeAttribute('disabled');
 			}
 		}
+	},
+
+	appendZero: function appendZero(number) {
+		return '0' + number;
 	}
 };
 
 const timerAPI = {
-	workTime: 2,
+	workTime: 1,
 	breakTime: 1,
 	isPaused: false,
 	isWorkTime: true,
@@ -197,7 +216,10 @@ const timerAPI = {
 				// Make sure nobody tries to kick off a timer with more than 59 seconds
 				seconds = seconds > 59 ? 59 : seconds;
 
-				if (seconds === 59) {
+				if (seconds === 59 && time < 10) {
+					minutes.textContent = time > 0 ? uiAPI.appendZero(time - 1) : uiAPI.appendZero(time);
+				}
+				else if (seconds === 59 && time >= 10) {
 					minutes.textContent = time > 0 ? time - 1 : time;
 				}
 
