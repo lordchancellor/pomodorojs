@@ -20,15 +20,9 @@ module.exports = {
 			},
 			{
 				test: /\.(scss|sass)$/,
-				use: ExtractTextPlugin.extract({
-					use: [{
-							loader: 'css-loader',
-							options: {
-								minimize: true
-							},
-						}, 
-						'sass-loader']	
-				})
+				use: ExtractTextPlugin.extract(
+					['css-loader', 'sass-loader']	
+				)
 			}
 		]
 	},
