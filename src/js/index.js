@@ -140,8 +140,8 @@ const uiAPI = {
 };
 
 const timerAPI = {
-	workTime: 1,
-	breakTime: 1,
+	workTime: 25,
+	breakTime: 5,
 	isPaused: false,
 	isWorkTime: true,
 	timeouts: [],
@@ -249,8 +249,5 @@ const timerAPI = {
 		}
 	}
 };
-
-// TODO Remove for production
-window.timer = timerAPI;
 
 (() => setupAPI.setupPage())();
