@@ -13,6 +13,7 @@ const setupAPI = {
 		const decreaseWorkTime = document.getElementsByClassName('work-time')[0].getElementsByClassName('decrease')[0];
 		const increaseBreakTime = document.getElementsByClassName('break-time')[0].getElementsByClassName('increase')[0];
 		const decreaseBreakTime = document.getElementsByClassName('break-time')[0].getElementsByClassName('decrease')[0];
+		const muteSwitch = document.getElementsByClassName('mute-label')[0];
 
 		startBtn.addEventListener('click', () => timerAPI.startTimer());
 		pauseBtn.addEventListener('click', () => timerAPI.pauseTimer());
@@ -21,6 +22,7 @@ const setupAPI = {
 		decreaseWorkTime.addEventListener('click', () => uiAPI.decreaseWorkTime());
 		increaseBreakTime.addEventListener('click', () => uiAPI.increaseBreakTime());
 		decreaseBreakTime.addEventListener('click', () => uiAPI.decreaseBreakTime());
+		muteSwitch.addEventListener('click', () => uiAPI.toggleMute());
 	},
 
 	setupPage: function setupPage() {
@@ -31,6 +33,8 @@ const setupAPI = {
 };
 
 const uiAPI = {
+	alarmSound: new Audio('http://soundbible.com/grab.php?id=2142&type=mp3'),
+
 	setTimers: function setTimers() {
 		const workTime = this.getMinutes('work-time');
 		const breakTime = this.getMinutes('break-time');
@@ -55,8 +59,9 @@ const uiAPI = {
 		workMinutes.textContent = timerAPI.getWorkTime();
 		breakMinutes.textContent = timerAPI.getBreakTime();
 
-		seconds[0].textContent = '00';
-		seconds[1].textContent = '00';
+		for (const section of seconds) {
+ 			section.textContent = '00';
+ 		}
 	},
 
 	resetIndividual: function resetIndividual(isWorkTime) {
@@ -133,6 +138,29 @@ const uiAPI = {
 
 	appendZero: function appendZero(number) {
 		return '0' + number;
+	},
+
+	toggleMute: function toggleMute() {
+		const volumeOn = document.getElementsByClassName('fa-volume-up')[0];
+		const volumeOff = document.getElementsByClassName('fa-volume-off')[0];
+
+		console.log('toggle mute has been called');
+
+		timerAPI.setMute(document.getElementById('mute').checked);
+
+		volumeOn.style.display = timerAPI.isMute() ? 'none' : 'inline';
+		volumeOff.style.display = timerAPI.isMute() ? 'inline' : 'none';
+
+		console.log('Mute = ' + timerAPI.mute);
+	},
+
+	soundAlarm: function soundAlarm() {
+		if (!timerAPI.isMute()) {
+			this.alarmSound.play();
+		}
+		else {
+			console.log('No alarm, it\'s mute!');
+		}
 	}
 };
 
@@ -142,6 +170,7 @@ const timerAPI = {
 	isPaused: false,
 	isWorkTime: true,
 	timeouts: [],
+	mute: false,
 
 	getWorkTime: function getWorkTime() {
 		return this.workTime;
@@ -157,6 +186,14 @@ const timerAPI = {
 
 	setBreakTime: function setBreakTime(time) {
 		this.breakTime = time;
+	},
+
+	setMute: function setMute(mute) {
+		this.mute = mute;
+	},
+
+	isMute: function isMute() {
+		return this.mute;
 	},
 
 	startTimer: function startTimer() {
@@ -196,6 +233,7 @@ const timerAPI = {
 	},
 
 	nextCycle: function nextCycle() {
+		uiAPI.soundAlarm();
 		this.isWorkTime = !this.isWorkTime;
 		this.clearTimeouts();
 		uiAPI.resetIndividual(this.isWorkTime);

@@ -285,6 +285,30 @@ header {
 					}
 				}
 			}
+
+			.mute-container {
+				width: 76px;
+				margin-top: 15px;
+
+				@media screen and (min-width: 500px) {
+					margin-top: 0px;
+				}
+
+				input[type=checkbox] {
+					position: absolute;
+					top: -9999px;
+					left: -9999px;
+				}
+
+				label {
+					font-family: 'Sacremento', cursive;
+					font-size: 1.25rem;
+
+					.fa-volume-off {
+						display: none;
+					}
+				}
+			}
 		}
 	}
 }
