@@ -304,6 +304,10 @@ header {
 					font-family: 'Sacramento', cursive;
 					font-size: 1.25rem;
 
+					&:hover {
+						cursor: pointer;
+					}
+
 					.fa-volume-off {
 						display: none;
 					}
