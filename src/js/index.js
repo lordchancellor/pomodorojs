@@ -33,7 +33,7 @@ const setupAPI = {
 };
 
 const uiAPI = {
-	alarmSound: new Audio('http://soundbible.com/grab.php?id=2142&type=mp3'),
+	alarmSound: new Audio('https://soundbible.com/grab.php?id=2142&type=mp3'),
 
 	setTimers: function setTimers() {
 		const workTime = this.getMinutes('work-time');
@@ -59,9 +59,9 @@ const uiAPI = {
 		workMinutes.textContent = timerAPI.getWorkTime();
 		breakMinutes.textContent = timerAPI.getBreakTime();
 
-		for (const section of seconds) {
- 			section.textContent = '00';
- 		}
+		for (const second of seconds) {
+			second.textContent = '00';
+		}
 	},
 
 	resetIndividual: function resetIndividual(isWorkTime) {
