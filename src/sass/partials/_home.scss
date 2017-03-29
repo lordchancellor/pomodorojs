@@ -131,13 +131,19 @@ header {
 				flex-direction: row;
 				align-items: center;
 				@include paddingX(20px);
+				width: 100%;
+				max-width: 280px;
+
+				@media screen and (min-width: 500px) {
+					width: auto;
+					max-width: none;
+				}
 
 				button {
 					background: none;
 					border: none;
 
 					&[disabled] {
-						// color: $btnDisabled;
 						opacity: 0.65;
 
 						&:hover {
@@ -151,27 +157,23 @@ header {
 					align-items: center;
 					justify-content: center;
 					@include marginX(15px);
-					// border: 1px solid;
 
 					span:first-of-type {
 						display: inline-block;
 						width: 40%;
 						text-align: right;
-						// border: 1px solid red;
 					}
 
 					span:nth-of-type(2) {
 						display: inline-block;
 						width: 20%;
 						text-align: center;
-						// border: 1px solid blue;
 					}
 
 					span:last-of-type {
 						display: inline-block;
 						width: 40%;
 						text-align: left;
-						// border: 1px solid green;
 					}
 				}
 			}
@@ -275,7 +277,6 @@ header {
 
 				.reset-button-container {
 					button[disabled] {
-						// background: $btnDisabled;
 						opacity: 0.65;
 
 						&:hover {
