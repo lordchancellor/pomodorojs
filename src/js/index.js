@@ -55,9 +55,8 @@ const uiAPI = {
 		workMinutes.textContent = timerAPI.getWorkTime();
 		breakMinutes.textContent = timerAPI.getBreakTime();
 
-		for (const section of seconds) {
-			section.textContent = '00';
-		}
+		seconds[0].textContent = '00';
+		seconds[1].textContent = '00';
 	},
 
 	resetIndividual: function resetIndividual(isWorkTime) {
@@ -114,8 +113,6 @@ const uiAPI = {
 	},
 
 	toggleButtons: function toggleButtons(isPaused) {
-		console.log('Toggle buttons called with isPaused = ' + isPaused);
-
 		const buttons = [
 			document.getElementsByClassName('reset-btn')[0],
 			document.getElementsByClassName('work-time')[0].getElementsByClassName('increase')[0],
