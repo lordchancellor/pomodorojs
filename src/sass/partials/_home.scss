@@ -142,6 +142,7 @@ header {
 				button {
 					background: none;
 					border: none;
+					padding: 0;
 
 					&[disabled] {
 						opacity: 0.65;
